@@ -1,17 +1,29 @@
 from urllib.parse import urlencode
 import requests 
 
-params = {
-    'v': 1,
-    't': 'pageview',
-    'tid': 'UA-211919994-1',
-    'cid': '555',
-    'dh': 'kievblues.pythonanywhere.com',
-    'dp': '/gmap_test',
-    'dt': 'tes-test-test'
-}
+def get_currency_rate(currency):
+    r = requests.get('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json')
+    r.raise_for_status()
+    for x in r.json():
+        if x['cc'] == currency:
+            return x['rate']
 
-url = 'https://www.google-analytics.com/collect?'+urlencode(params)
-
-r = requests.post(url = url, headers={'User-Agent': 'My User Agent 1.0'}) 
-print(r)
+def send_currency_rate_to_ga(currency, rate):
+    params = {
+        'v': 1,
+        't': 'event',
+        'tid': 'UA-211919994-1',
+        'cid': '444',
+        'dl': 'http://kievblues.pythonanywhere.com/rate',
+        'cs': 'bank.gov.ua',
+        'cm': 'rate',
+        'ec': currency,
+        'ea': rate,
+    }
+    
+    url = 'https://www.google-analytics.com/collect?'+urlencode(params)
+    r = requests.post(url = url, headers={'User-Agent': 'My User Agent 1.0'}) 
+    print(r)
+    
+rate = get_currency_rate('USD')
+send_currency_rate_to_ga('USD', rate)
