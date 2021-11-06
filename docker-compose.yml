@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: apache/airflow:latest
+    container_name: airflow
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./airflow:/opt/airflow
+    entrypoint: python3 /opt/airflow/run.py
