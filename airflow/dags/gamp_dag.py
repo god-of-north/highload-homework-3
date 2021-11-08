@@ -20,10 +20,9 @@ def send_currency_rate_to_ga(currency, rate):
         'tid': 'UA-211919994-1',
         'cid': '444',
         'dl': 'http://kievblues.pythonanywhere.com/rate',
-        'cs': 'bank.gov.ua',
-        'cm': 'rate',
         'ec': currency,
-        'ea': rate,
+        'ea': 'rate',
+        'ev': int(rate*1000)
     }
     
     url = 'https://www.google-analytics.com/collect?'+urlencode(params)
